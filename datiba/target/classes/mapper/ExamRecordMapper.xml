@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.datiba.mapper.ExamRecordMapper">
+    <update id="updateStatus">
+        update exam_record
+        set end_time = ddl, status = 3
+        where status != 3
+        and ddl <![CDATA[ <= ]]> #{now}
+    </update>
+
+    <select id="selectByUserId" resultType="com.datiba.domain.ExamRecord">
+        select *
+        from exam_record
+        where user_id = #{userId}
+        order by created_time desc
+    </select>
+    <select id="listRecentPaper" resultType="java.lang.Integer">
+        select distinct paper_id
+        from exam_record
+        where user_id = #{userId}
+        order by created_time desc
+            limit #{size}
+    </select>
+    <select id="selectByPaperId" resultType="com.datiba.domain.ExamRecord">
+        select *
+        from exam_record
+        <where>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId}
+            </if>
+            <if test="paperId != null and paperId != ''">
+                and paper_id = #{paperId}
+            </if>
+            <if test="unfinish != null and unfinish != ''">
+                and status != #{unfinish}
+            </if>
+            <if test="status != null and status != ''">
+                and status = #{status}
+            </if>
+        </where>
+        order by created_time desc
+
+    </select>
+    <select id="selectByExamId" resultType="com.datiba.domain.ExamRecord">
+        select *
+        from exam_record
+        where exam_id in
+        <foreach collection="list" index="index" item="list" open="(" close=")" separator=",">
+            #{list}
+        </foreach>
+        order by created_time desc
+    </select>
+    <select id="selectClazzRecord" resultType="com.datiba.domain.ExamRecord">
+        select *
+        from exam_record
+        where exam_id = #{examId}
+        and status = 3
+        and user_id in
+        <foreach item="item" index="index" collection="studentIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="getUserExamRecord" resultType="com.datiba.domain.ExamRecord">
+        select *
+        from exam_record
+        where exam_id = #{examId}
+          and user_id = #{userId}
+          and status = 3
+    </select>
+
+
+</mapper>

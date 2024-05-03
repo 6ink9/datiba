@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.datiba.mapper.QuestionMapper">
+
+    <select id="listQuestion" resultType="com.datiba.domain.Question">
+        select *
+        from question
+        <where>
+            <if test="bankId != null and bankId != ''">
+                bank_id = #{bankId}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                and keyword LIKE CONCAT('%', #{keyword}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>

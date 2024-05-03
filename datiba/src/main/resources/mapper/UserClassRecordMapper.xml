@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.datiba.mapper.UserClassRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.datiba.domain.UserClassRecord">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="createdTime" column="created_time" jdbcType="TIMESTAMP"/>
+            <result property="updatedTime" column="updated_time" jdbcType="TIMESTAMP"/>
+            <result property="classId" column="class_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,created_time,
+        updated_time,class_id
+    </sql>
+    <delete id="quitClazz">
+        delete from user_class_record
+        where id = #{recordId}
+    </delete>
+    <select id="selectStudIdsByClazz" resultType="java.lang.Integer">
+        select user_id
+        from user_class_record
+        where  user_id != #{teacherId}
+            and class_id = #{clazzId}
+    </select>
+    <select id="check" resultType="com.datiba.domain.UserClassRecord">
+        select *
+        from user_class_record
+        where user_id = #{userId}
+            and class_id = #{clazzId}
+    </select>
+</mapper>
